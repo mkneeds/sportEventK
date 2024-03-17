@@ -11,10 +11,8 @@
       <link th:href="@{/web/css/fonts.css}" rel="stylesheet" />
       <link th:href="@{/web/css/style.css}" rel="stylesheet" />
 
-    <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
   </head>
   <body>
-    <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="web/images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
     <div class="preloader" id="loading">
       <div class="preloader-body">
         <div id="loading-center-object">
@@ -66,11 +64,11 @@
           <div class="page-header-2-inner">
             <div class="container">
               <div class="block-custom">
-                <h2 class="font-weight-extra-black wow clipInLeft" data-wow-delay=".1s">Professional Business Consulting</h2>
-                <h4 class="text-default wow clipInLeft" data-wow-delay=".1s">Businet provides reliable business planning, management, and advisory services backed by years of experience in the industry.</h4>
+                <h2 class="font-weight-extra-black wow clipInLeft" data-wow-delay=".1s" style="color:black">Профессиональная организационная площадка</h2>
+                <h4 class="text-default wow clipInLeft" data-wow-delay=".1s" style="color:black">Мы - платформа для организации спортивных мероприятий. Создаем, находим и участвуем в соревнованиях, тренировках и мастер-классах. Легко управляем мероприятиями, регистрируем участников и общаемся. Наша цель - сделать спорт доступным и увлекательным!</h4>
                 <div class="group-xl group-middle">
-                  <div><a class="button button-lg button-white button-shadow button-winona wow clipInLeft" href="web/about-us.html" data-wow-delay=".2s">Read more</a></div>
-                  <div><a class="button button-lg button-primary button-shadow button-winona wow clipInLeft" href="web/contact-us.html" data-wow-delay=".2s">Get in Touch</a></div>
+                  <div><a class="button button-lg button-white button-shadow button-winona wow clipInLeft" href="web/about-us.html" data-wow-delay=".2s">О нас</a></div>
+                  <div><a class="button button-lg button-primary button-shadow button-winona wow clipInLeft" href="web/contact-us.html" data-wow-delay=".2s">В каталог</a></div>
                 </div>
               </div>
             </div>
@@ -503,5 +501,6 @@
     <script src="web/js/core.min.js"></script>
     <script src="web/js/script.js"></script>
     <script src="web/js/logging.js"></script>
+    <script src="web/js/main/checkAuth.js"></script>
   </body>
 </html>
