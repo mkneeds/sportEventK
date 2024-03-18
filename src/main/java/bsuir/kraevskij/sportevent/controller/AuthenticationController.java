@@ -25,7 +25,7 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/register")
+    @PostMapping("auth/register")
     public ResponseEntity<?> register(@RequestBody User request) {
 
         if (request.getUsername() == null || request.getUsername().isEmpty() ||
@@ -60,7 +60,7 @@ public class AuthenticationController {
 
 
 
-    @PostMapping("/login")
+    @PostMapping("auth/login")
     public ResponseEntity<?> login(@RequestBody User request) {
         try {
             if (request.getUsername() == null || request.getPassword() == null) {

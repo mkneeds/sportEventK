@@ -21,7 +21,7 @@ public class TokenValidationController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/login/validateToken")
+    @PostMapping("auth/login/validateToken")
     public ResponseEntity<?> validateToken(@RequestBody Token token) {
         try {
             User user = new User();

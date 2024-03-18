@@ -55,7 +55,7 @@ document.getElementById("registrationForm").addEventListener("submit", function(
         role: roleElement.value
     };
 
-    fetch("/register", {
+    fetch("auth/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -91,7 +91,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     var login = document.getElementById('loginA').value;
     var password = document.getElementById('passwordA').value;
 
-    fetch('/login', {
+    fetch('auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

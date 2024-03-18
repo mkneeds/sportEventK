@@ -1,7 +1,7 @@
 
 function checkTokenValidity() {
     let token = getToken();
-    fetch('login/validateToken', {
+    fetch('auth/login/validateToken', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

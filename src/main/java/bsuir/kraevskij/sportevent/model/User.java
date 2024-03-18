@@ -19,6 +19,8 @@ public class User implements UserDetails {
 
     @Column(name = "first_name")
     private String firstName;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "last_name")
     private String lastName;
@@ -116,5 +118,12 @@ public class User implements UserDetails {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

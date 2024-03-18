@@ -5,6 +5,7 @@ import bsuir.kraevskij.sportevent.model.User;
 import bsuir.kraevskij.sportevent.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +41,7 @@ public class JwtService {
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -62,7 +63,15 @@ public class JwtService {
                 .getPayload();
     }
 
-
+    public String generatePasswordResetToken(User user) {
+        long currentTimeMillis = System.currentTimeMillis();
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .setIssuedAt(new Date(currentTimeMillis))
+                .setExpiration(new Date(currentTimeMillis + 24 * 60 * 60 * 1000)) // Срок действия токена: 24 часа
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
     public String generateToken(User user) {
         String token = Jwts
                 .builder()
@@ -79,5 +88,6 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 
 }
