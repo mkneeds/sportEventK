@@ -17,7 +17,7 @@ function checkTokenValidity() {
         })
         .then(data => {
             var username = data.message;
-            changeButtonText(username);
+            replaceElement(username)
         })
         .catch(error => {
             console.error('Ошибка при отправке запроса на проверку токена:', error);
@@ -37,6 +37,25 @@ function changeButtonText(username) {
         loginButton.textContent = username;
     }
 }
+function replaceElement(username) {
+    var loginButton = document.getElementById("loginButton");
+    loginButton.style.display='none';
+    var profileLogIn = document.querySelector('.profileLogIn');
+    var dropdownButton = document.getElementById('dropdownButton');
+    profileLogIn.style.display = 'block';
+    dropdownButton.querySelector('p').textContent = username;
+}
+
+
 
 
 checkTokenValidity();
+
+
+var logoutButton = document.getElementById('LogOutB');
+logoutButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    removeToken()
+    location.reload();
+});
+
