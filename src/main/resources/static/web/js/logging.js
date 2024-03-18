@@ -86,7 +86,7 @@ document.getElementById("registrationForm").addEventListener("submit", function(
 });
 
 document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Отменяем стандартное поведение формы (перезагрузку страницы)
+    event.preventDefault();
 
     var login = document.getElementById('loginA').value;
     var password = document.getElementById('passwordA').value;
@@ -112,7 +112,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             alert("Авторизация прошла успешно!")
             overlay.style.display = 'none';
             ContainerAuth.style.display = 'none';
-
+            location.reload();
         })
         .catch(error => {
             alert('Произошла ошибка:', error.message);

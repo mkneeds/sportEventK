@@ -10,14 +10,12 @@ function checkTokenValidity() {
     })
         .then(response => {
             if (response.ok) {
-                // Парсим тело ответа в формате JSON
                 return response.json();
             } else {
                 throw new Error('Ошибка при проверке токена: ' + response.statusText);
             }
         })
         .then(data => {
-            // Получаем значение message из ответа сервера и меняем текст кнопки
             var username = data.message;
             changeButtonText(username);
         })
