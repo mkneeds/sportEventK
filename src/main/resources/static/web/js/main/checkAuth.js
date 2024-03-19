@@ -59,3 +59,42 @@ logoutButton.addEventListener('click', function(event) {
     location.reload();
 });
 
+var forgotPasswordLink = document.getElementById('forgotPasswordLink');
+var modal = document.getElementById('forgotPasswordModal');
+var closeBtn = modal.querySelector('.close');
+forgotPasswordLink.addEventListener('click', function(event) {
+    modal.style.display = 'block';
+});
+closeBtn.addEventListener('click', function(event) {
+    modal.style.display = 'none';
+});
+
+var sendResetLinkBtn = document.getElementById('sendResetLink');
+sendResetLinkBtn.addEventListener('click', function(event) {
+    var formData = new URLSearchParams();
+    let email = document.getElementById("emailF").value;
+    console.log(email)
+    formData.append('email', email);
+
+    fetch('/auth/reset-password-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded' // Устанавливаем правильный Content-Type
+        },
+        body: formData.toString()
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('Ссылка для восстановления пароля отправлена на ваш email.');
+                modal.style.display = 'none';
+            } else {
+                alert('Ошибка при отправке ссылки для восстановления пароля.');
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            alert('Произошла ошибка при отправке запроса.');
+        });
+});
+
+

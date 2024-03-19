@@ -246,7 +246,7 @@
             <h1>Авторизация</h1>
             <input type="login" id="loginA" placeholder="Логин" />
             <input type="password" id="passwordA" placeholder="Пароль" />
-            <a href="#">Забыли пароль?</a>
+            <a href="#" id="forgotPasswordLink">Забыли пароль?</a>
             <button>Вход</button>
           </form>
         </div>
@@ -264,6 +264,15 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Восстановление пароля</h2>
+        <input class="form-input" type="email" id="emailF" name="email" placeholder="Ваш email" required>
+        <button class="button-circle btn-9" id="sendResetLink">Отправить</button>
       </div>
     </div>
 

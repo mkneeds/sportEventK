@@ -7,8 +7,9 @@ import bsuir.kraevskij.sportevent.repository.UserRepository;
 import bsuir.kraevskij.sportevent.service.EmailService;
 import bsuir.kraevskij.sportevent.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -18,15 +19,30 @@ public class PasswordResetService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
-
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     public PasswordResetService(JwtService jwtService, UserRepository userRepository,
-                                TokenRepository tokenRepository, EmailService emailService) {
+                                TokenRepository tokenRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
+    public boolean validatePasswordResetToken(String token) {
+        Optional<Token> tokenOptional = tokenRepository.findByToken(token);
+        if (tokenOptional.isPresent()) {
+            Token resetToken = tokenOptional.get();
+
+            if (!resetToken.isLoggedOut() && !jwtService.isTokenExpired(token)) {
+                LocalDateTime tokenCreationTime = resetToken.getCreatedAt();
+                LocalDateTime now = LocalDateTime.now();
+                return tokenCreationTime.isAfter(now.minusHours(24));
+            }
+        }
+        return false;
+    }
+
 
     public void initiatePasswordReset(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -34,36 +50,32 @@ public class PasswordResetService {
             User user = userOptional.get();
             String resetToken = jwtService.generatePasswordResetToken(user);
 
-            // Сохранить токен сброса пароля в репозитории
             Token token = new Token();
             token.setToken(resetToken);
             token.setUser(user);
             token.setLoggedOut(false);
             tokenRepository.save(token);
 
-            // Отправить электронное письмо с ссылкой для сброса пароля
-            String resetLink = "https://localhost:8080/reset-password?token=" + resetToken;
+            String resetLink = "http://localhost:8080/auth/reset-password-form?token=" + resetToken;
             String emailBody = "Для сброса пароля перейдите по ссылке: " + resetLink;
             emailService.sendEmail(user.getEmail(), "Сброс пароля", emailBody);
         }
     }
 
     public boolean resetPassword(String token, String newPassword) {
-        // Извлечь информацию о пользователе из токена
+
         Optional<Token> tokenOptional = tokenRepository.findByToken(token);
         if (tokenOptional.isPresent()) {
             Token resetToken = tokenOptional.get();
             if (!resetToken.isLoggedOut() && !jwtService.isTokenExpired(token)) {
                 User user = resetToken.getUser();
-                // Обновить пароль пользователя
-                user.setPassword(newPassword);
+                user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
-                // Пометить токен сброса пароля как использованный
                 resetToken.setLoggedOut(true);
                 tokenRepository.save(resetToken);
-                return true; // Успешно сброшен пароль
+                return true;
             }
         }
-        return false; // Не удалось сбросить пароль
+        return false;
     }
 }

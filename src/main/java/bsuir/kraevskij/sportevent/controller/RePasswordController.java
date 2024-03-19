@@ -24,6 +24,23 @@ public class RePasswordController {
         passwordResetService.initiatePasswordReset(email);
         return "Password reset request accepted for email: " + email;
     }
+    @GetMapping("auth/reset-password-form")
+    public String showResetPasswordForm(Model model, @RequestParam("token") String token) {
+        boolean isValidToken = passwordResetService.validatePasswordResetToken(token);
+        model.addAttribute("token", token);
+        model.addAttribute("isValidToken", isValidToken);
+        return "reset-password-form";
+    }
+    @PostMapping("auth/reset-password")
+    @ResponseBody
+    public String resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        boolean isPasswordReset = passwordResetService.resetPassword(token, newPassword);
+        if (isPasswordReset) {
+            return "Пароль успешно сброшен!";
+        } else {
+            return "Неудача(";
+        }
+    }
 
 
 }
