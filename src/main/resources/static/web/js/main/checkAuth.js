@@ -25,12 +25,23 @@ function checkTokenValidity() {
 }
 
 function getToken() {
-    return localStorage.getItem('jwtToken');
+
+    const cookies = document.cookie.split('; ');
+
+    const tokenCookie = cookies.find(cookie => cookie.startsWith('jwtToken='));
+
+    if (tokenCookie) {
+        return tokenCookie.split('=')[1];
+    } else {
+        return null;
+    }
 }
 
 function removeToken() {
-    localStorage.removeItem('jwtToken');
+    // Устанавливаем истекшую дату для куки с токеном, что приведет к ее удалению
+    document.cookie = 'jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 }
+
 function changeButtonText(username) {
     var loginButton = document.getElementById("loginButton");
     if (loginButton) {
@@ -96,5 +107,33 @@ sendResetLinkBtn.addEventListener('click', function(event) {
             alert('Произошла ошибка при отправке запроса.');
         });
 });
+
+document.getElementById("ProfileB").addEventListener("click", function() {
+
+    // Получаем токен из localStorage
+    var token = getToken(); // Предположим, что токен хранится в localStorage
+
+    if (token) {
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', '/profile');
+
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                window.location.href = "/profile";
+            } else {
+                console.error("Failed to fetch profile data");
+            }
+        };
+        xhr.send();
+    } else {
+        console.error("Token not found in localStorage");
+    }
+
+});
+
 
 

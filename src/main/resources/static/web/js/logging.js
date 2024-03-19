@@ -120,10 +120,10 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
 });
 
-
 function setToken(token) {
-    localStorage.setItem('jwtToken', token);
+        document.cookie = `jwtToken=${token}; path=/`;
 }
+
 
 const token = localStorage.getItem('jwtToken');
 
