@@ -67,16 +67,16 @@
 }
 
 /* Стили для формы в модальном окне */
-#editProductForm div {
+#editProductForm,#addProductForm div {
     margin-bottom: 10px;
 }
 
-#editProductForm label {
+#editProductForm,#addProductForm label {
     display: block;
     font-weight: bold;
 }
 
-#editProductForm input[type="text"] {
+#editProductForm ,#addProductForm input[type="text"] {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -84,7 +84,7 @@
     box-sizing: border-box;
 }
 
-#editProductForm button {
+#editProductForm, #addProductForm button {
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
@@ -93,6 +93,20 @@
     cursor: pointer;
 }
 
-#editProductForm button:hover {
+#editProductForm, #addProductForm button:hover {
     background-color: #45a049;
+}
+.ui-datepicker .selected-start:not(.selected-end) a,
+.ui-datepicker .selected-end:not(.selected-start) a {
+    background: #F3FDD5;
+}
+
+.ui-datepicker .selected.first-of-month:not(.selected-start) a {
+    border-left: 2px dotted #D4E7F6;
+    padding-left: 1px;
+}
+
+.ui-datepicker .selected.last-of-month:not(.selected-end) a {
+    border-right: 2px dotted #D4E7F6;
+    padding-right: 1px;
 }

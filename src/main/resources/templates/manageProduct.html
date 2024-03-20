@@ -14,64 +14,123 @@
     <link th:href="@{/web/css/styleProduct.css}" rel="stylesheet" />
 </head>
 <body>
+<button id="addProductButton" class="btn btn-tertiary btn-xs">Добавить</button>
 <table class="table">
-    <!-- Заголовок таблицы -->
     <thead>
     <tr>
         <th>Название</th>
         <th>Описание</th>
         <th>Категория</th>
         <th>Срок действий</th>
+        <th>Ссылка на изображение</th>
         <th>Цена</th>
         <th class="col-sm-2"></th>
     </tr>
     </thead>
     <tbody>
-    <!-- Разметка для каждого продукта -->
     <tr th:each="product : ${products}" th:id="'productRow_' + ${product.id}">
         <td class="product-name" th:text="${product.name}"></td>
         <td class="product-description" th:text="${product.description}"></td>
         <td class="product-cat" th:text="${product.category.name}"></td>
         <td class="product-date" th:text="${product.date}"></td>
+        <td class="product-img" th:text="${product.imageUrl}"></td>
         <td class="product-price">
             <span th:text="${product.price}"></span>
             <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
         </td>
         <td>
-            <!-- Кнопка "Edit" -->
+
             <button class="btn btn-warning btn-xs">Редактировать</button>
-            <!-- Кнопка "Delete" -->
+
             <button class="btn btn-danger btn-xs">Удалить</button>
         </td>
-        <!-- Скрытая ячейка с идентификатором продукта -->
         <td class="product-id" style="display: none;" th:text="${product.id}"></td>
     </tr>
     </tbody>
 </table>
 
-<!-- Модальное окно редактирования продукта -->
 <div id="editProductModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeEditProductModal()">&times;</span>
-        <h2>Edit Product</h2>
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Редактирование</h2>
         <form id="editProductForm">
-            <input type="hidden" id="editProductId" name="id" />
+            <input type="hidden" id="editProductId" name="id" required /> 
             <div>
-                <label for="editProductName">Name:</label>
-                <input type="text" id="editProductName" name="name" />
+                <label for="editProductName">Название:</label>
+                <input type="text" id="editProductName" name="name" required /> 
             </div>
             <div>
-                <label for="editProductDescription">Description:</label>
-                <input type="text" id="editProductDescription" name="description" />
+                <label for="editProductDescription">Описание:</label>
+                <input type="text" id="editProductDescription" name="description" required /> 
             </div>
             <div>
-                <label for="editProductPrice">Price:</label>
-                <input type="text" id="editProductPrice" name="price" />
+                <label for="editProductPrice">Цена:</label>
+                <input type="text" id="editProductPrice" name="price" required /> 
             </div>
-            <button type="button" id="editProductSubmit">Save</button>
+            <div>
+                <label for="editProductDate">Период проведения:</label>
+                <input type="text" id="editProductDate" name="date" required autocomplete="off" /> 
+            </div>
+            <div>
+                <label for="editProductCategory">Категория:</label>
+                <select id="editProductCategory" name="category" required>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+            <div>
+                <label for="editProductImageUrl">Ссылка на фото:</label>
+                <input type="text" id="editProductImageUrl" name="imageUrl" required /> 
+            </div>
+            <div id="imagePreview"></div>
+            <button type="button" id="editProductSubmit">Сохранить</button>
         </form>
     </div>
 </div>
+<div id="addProductModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeAddModal">&times;</span>
+        <h2>Добавление продукта</h2>
+        <form id="addProductForm">
+            <div>
+                <label for="addProductName">Название:</label>
+                <input type="text" id="addProductName" name="name" required />
+            </div>
+            <div>
+                <label for="addProductDescription">Описание:</label>
+                <input type="text" id="addProductDescription" name="description" required />
+            </div>
+            <div>
+                <label for="addProductPrice">Цена:</label>
+                <input type="text" id="addProductPrice" name="price" required />
+            </div>
+            <div>
+                <label for="addProductDate">Период проведения:</label>
+                <input type="text" id="addProductDate" name="date" required autocomplete="off" />
+            </div>
+            <div>
+                <label for="addProductCategory">Категория:</label>
+                <select id="addProductCategory" name="category" required>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+            <div>
+                <label for="imageInput">Выбрать изображение:</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+
+            <div>
+                <label for="addProductImageUrl">Ссылка на фото:</label>
+                <input type="text" id="addProductImageUrl" name="imageUrl" />
+            </div>
+            <div id="addImagePreview"></div>
+            <button type="button" id="addProductSubmit">Добавить</button>
+        </form>
+    </div>
+</div>
+
 </body>
 <script src="/web/js/main/settingsProduct.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </html>

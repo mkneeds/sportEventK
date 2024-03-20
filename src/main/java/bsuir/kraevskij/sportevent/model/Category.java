@@ -14,5 +14,10 @@ public class Category {
     @Setter
     @Getter
     private String name;
+    public Category(String id) {
+        this.id = Long.parseLong(id);
+    }
+    public Category() {
 
+    }
 }
