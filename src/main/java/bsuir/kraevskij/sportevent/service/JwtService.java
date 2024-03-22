@@ -89,7 +89,7 @@ public class JwtService {
         String token = null;
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals("jwtToken")) { // Имя куки, в которой хранится токен
+                if (cookie.getName().equals("jwtToken")) {
                     token = cookie.getValue();
                     break;
                 }

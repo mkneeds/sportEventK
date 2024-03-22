@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -23,6 +24,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RoleRepository roleRepository;
+    private final UserDetailsServiceImp userDetailsServiceImp;
 
     private final TokenRepository tokenRepository;
 
@@ -31,12 +33,13 @@ public class AuthenticationService {
     public AuthenticationService(UserRepository repository,
                                  PasswordEncoder passwordEncoder,
                                  JwtService jwtService,
-                                 RoleRepository roleRepository, TokenRepository tokenRepository,
+                                 RoleRepository roleRepository, UserDetailsServiceImp userDetailsServiceImp, TokenRepository tokenRepository,
                                  AuthenticationManager authenticationManager) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.roleRepository = roleRepository;
+        this.userDetailsServiceImp = userDetailsServiceImp;
         this.tokenRepository = tokenRepository;
         this.authenticationManager = authenticationManager;
     }
@@ -52,6 +55,12 @@ public class AuthenticationService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setUsername(request.getUsername());
+        if(isEmailUnique(request.getEmail())){
+            user.setEmail(request.getEmail());
+        }
+        else{
+            return new AuthenticationResponse(null, "Данный EMAIL уже существует",409);
+        }
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
 
@@ -64,7 +73,8 @@ public class AuthenticationService {
 
         user.setRole(role);
 
-        user = repository.save(user);
+
+        user = userDetailsServiceImp.createUserWithBalance(user);
 
         String jwt = jwtService.generateToken(user);
 
@@ -72,6 +82,11 @@ public class AuthenticationService {
 
         return new AuthenticationResponse(jwt, "User registration was successful",200);
 
+    }
+
+    public boolean isEmailUnique(String email) {
+        Optional<User> user = repository.findByEmail(email);
+        return user.isEmpty();
     }
 
     public AuthenticationResponse authenticate(User request) {

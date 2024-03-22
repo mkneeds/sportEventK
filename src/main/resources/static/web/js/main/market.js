@@ -67,11 +67,103 @@ function ready(){
 
 function purchaseClicked(){
     var cartItems = document.getElementsByClassName('cart-items')[0];
-    while(cartItems.hasChildNodes()){
-        cartItems.removeChild(cartItems.firstChild)
-    }
-    updateCartTotal();
+    var total = calculateCartTotal();
+    var userBalancePromise = getUserBalance(getToken());
+    userBalancePromise.then(userBalance => {
+        if (userBalance >= total) {
+            sendPaymentDataToServer();
+            while (cartItems.hasChildNodes()) {
+                cartItems.removeChild(cartItems.firstChild)
+            }
+            updateCartTotal();
+        }else {
+            alert('Недостаточно баланса. Пополните!');
+        }
+    }).catch(error => {
+
+        console.error('Error fetching user balance:', error);
+    });
+
 }
+function getUserBalance(token) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch('/product/getUserBalance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: token })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                resolve(data.balance);
+            } else {
+                throw new Error('Failed to get user balance');
+            }
+        } catch (error) {
+            console.error('Error fetching user balance:', error);
+            reject(null);
+        }
+    });
+}
+
+function calculateCartTotal() {
+    var cartItemContainer = document.getElementsByClassName('cart-items')[0];
+    var cartRows = cartItemContainer.getElementsByClassName('cart-row');
+    var total = 0;
+    for (var i = 0; i < cartRows.length; i++) {
+        var cartRow = cartRows[i];
+        var priceElement = cartRow.getElementsByClassName('cart-price')[0];
+        var quantityElement = cartRow.getElementsByClassName('cart-quantity-input')[0];
+        var price = parseFloat(priceElement.innerText.replace('$', ''));
+        var quantity = quantityElement.value;
+        total += price * quantity;
+    }
+    return total;
+}
+function sendPaymentDataToServer() {
+    var cartItems = document.getElementsByClassName('cart-items')[0];
+    var cartRows = cartItems.getElementsByClassName('cart-row');
+    var purchases = [];
+
+    for (var i = 0; i < cartRows.length; i++) {
+        var cartRow = cartRows[i];
+        var title = cartRow.getElementsByClassName('cart-item-title')[0].innerText;
+        var price = cartRow.getElementsByClassName('cart-price')[0].innerText;
+        var quantity = cartRow.getElementsByClassName('cart-quantity-input')[0].value;
+        var token = getToken()
+        purchases.push({ title: title, price: price, quantity: quantity,token:token});
+    }
+
+    console.log(purchases);
+    fetch('/product/purchase', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getToken()
+        },
+        body: JSON.stringify(purchases)
+
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log(data); // Успешный ответ от сервера
+            // Очистить корзину или выполнить другие действия после успешной покупки
+            cartItems.innerHTML = '';
+            updateCartTotal();
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+            // Обработка ошибки при выполнении запроса
+        });
+}
+
 
 function removeCartItem(event){
     var buttonClicked = event.target;
