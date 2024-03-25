@@ -3,6 +3,7 @@ package bsuir.kraevskij.sportevent.controller;
 import bsuir.kraevskij.sportevent.model.Category;
 import bsuir.kraevskij.sportevent.model.Product;
 import bsuir.kraevskij.sportevent.model.User;
+import bsuir.kraevskij.sportevent.repository.UserRepository;
 import bsuir.kraevskij.sportevent.service.AuthenticationService;
 import bsuir.kraevskij.sportevent.service.CategoryService;
 import bsuir.kraevskij.sportevent.service.JwtService;
@@ -12,23 +13,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 @RestController
 public class ProductController {
     private final ProductService productService;
     private final JwtService jwtService;
     private final CategoryService categoryService;
+    private final UserRepository userDetailsService;
 
-    public ProductController(ProductService productService, JwtService jwtService, CategoryService categoryService) {
+    public ProductController(ProductService productService, JwtService jwtService, CategoryService categoryService, UserRepository userDetailsService) {
         this.productService = productService;
         this.jwtService = jwtService;
         this.categoryService = categoryService;
+        this.userDetailsService = userDetailsService;
     }
+
 
     @GetMapping("/product/manage-product")
     public ModelAndView showManageProductPage(Model model, Principal principal, HttpServletRequest request) {
@@ -63,4 +69,23 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ошибка при добавлении продукта: " + e.getMessage());
         }
     }
+    @GetMapping("/tickets")
+    public ModelAndView generateTickets(@RequestParam List<String> ticketTitles,HttpServletRequest request) {
+        String username = jwtService.extractUsername(jwtService.extractTokenFromCookie(request));
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("ticket");
+        List<Product> tickets = new ArrayList<>();
+        for (String title : ticketTitles) {
+            Product ticket = productService.getProductByTitles(title).get();
+            if (ticket != null) {
+                tickets.add(ticket);
+            }
+        }
+        modelAndView.addObject("ticketTitles", tickets);
+        modelAndView.addObject("person",userDetailsService.findByUsername(username).get());
+
+        return modelAndView;
+    }
+
+
 }

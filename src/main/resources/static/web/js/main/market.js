@@ -1,5 +1,3 @@
-
-
 const allFilterItems = document.querySelectorAll('.filter-item');
 const allFilterBtns = document.querySelectorAll('.filter-btn');
 
@@ -118,6 +116,16 @@ function calculateCartTotal() {
     }
     return total;
 }
+function generateReceipt(purchases) {
+    fetch('/tickets?ticketTitles=' + purchases.map(purchase => purchase.title).join(','))
+        .then(response => response.text())
+        .then(html => {
+            var newWindow = window.open();
+            newWindow.document.write(html);
+        })
+        .catch(error => console.error('Ошибка при запросе на генерацию билетов:', error));
+}
+
 function sendPaymentDataToServer() {
     var cartItems = document.getElementsByClassName('cart-items')[0];
     var cartRows = cartItems.getElementsByClassName('cart-row');
@@ -132,7 +140,7 @@ function sendPaymentDataToServer() {
         purchases.push({ title: title, price: price, quantity: quantity,token:token});
     }
 
-    console.log(purchases);
+    generateReceipt(purchases)
     fetch('/product/purchase', {
         method: 'POST',
         headers: {
@@ -292,3 +300,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+

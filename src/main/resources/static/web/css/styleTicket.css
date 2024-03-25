@@ -1,0 +1,81 @@
+:root {
+    --size: 1;
+    --background: #000;
+}
+body {
+    background: var(--background);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.ticket-visual_visual {
+    width: 650px;
+    height: 320px;
+    margin: 100px auto;
+    position: relative;
+    transition: all 300mx cubic-bezier(0.03, 0.98, 0.53, 0.99) 0s;
+    border: 5px solid #fff;
+}
+
+.ticket-visual-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.ticket-visual_profile {
+    padding: calc(39px * var(--size)) calc(155px * var(--size)) calc(39px * var(--size)
+    ) calc(58px * var(--size));
+}
+
+.ticket-profile_text {
+    margin: 0;
+}
+
+.ticket-profile_profile {
+    display: flex;
+    flex-direction: row;
+}
+
+.ticket-event {
+    margin-top: 25px;
+    margin-left: -10px;
+}
+
+.ticket-profile_image {
+    width: calc(82px * var(--size));
+    heigth: calc(82px * var(--size));
+    border-radius: 50%;
+}
+
+.ticket-profile_name {
+    font-size: calc(32px * var(--size));
+    margin: 10px 0 5px 20px;
+    font-weigth: 700;
+}
+
+.ticket-profile_githubIcon img {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+}
+
+.ticket-visual_ticket-number-wrapper {
+    position: absolute;
+    right: 35px;
+    bottom: 0;
+}
+
+.ticket-visual_ticket-number {
+    transform: rotate(90deg) translateY(calc(100px * var(--size)));
+    transform-origin: bottom right;
+    font-size: calc(40px * var(--size));
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 35px;
+    width: calc(320px - 10px);
+    border-bottom: 2px dashed #333;
+}
