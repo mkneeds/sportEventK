@@ -84,14 +84,14 @@ public class PurchaseService {
     }
     @Transactional(readOnly = true)
     public double getUserSales(User user) {
-        List<Purchase> userPurchases = purchaseRepository.findByBuyer(user);
+        List<Purchase> userPurchases = purchaseRepository.findBySeller(user);
         double userSales = userPurchases.stream().mapToDouble(Purchase::getAmount).sum();
         return userSales;
     }
     public List<Map<String, Object>> getUserSalesData(User user) {
         List<Map<String, Object>> salesData = new ArrayList<>();
 
-        List<Purchase> userPurchases = purchaseRepository.findByBuyer(user);
+        List<Purchase> userPurchases = purchaseRepository.findBySeller(user);
         for (int i = 0; i < 12; i++) {
             Map<String, Object> monthData = new HashMap<>();
             monthData.put("month", i);

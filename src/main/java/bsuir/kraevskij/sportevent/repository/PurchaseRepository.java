@@ -14,4 +14,5 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     @Query("SELECT SUM(p.amount) FROM Purchase p")
     Double sumAmount();
     List<Purchase> findByBuyer(User buyer);
+    List<Purchase> findBySeller(User seller);
 }

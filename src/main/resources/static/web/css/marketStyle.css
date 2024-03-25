@@ -230,3 +230,30 @@ body{
     inset -4px -4px 6px 0 rgba(255,255,255,.5),
     inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
 }
+.promo-code {
+    margin-top: 20px;
+}
+
+.promo-code label {
+    font-weight: bold;
+}
+
+.promo-code input[type="text"] {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.promo-code button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.promo-code button:hover {
+    background-color: #0056b3;
+}

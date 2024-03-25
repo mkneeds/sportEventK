@@ -234,5 +234,61 @@ function updateCartTotal(){
     }
     total = Math.round(total * 100 )/100;
     document.getElementsByClassName('cart-total-price')[0].innerText = total + '.00'+'BYN ';
-
 }
+function updateCartTotalDiscount(discount){
+    var cartItemContainer = document.getElementsByClassName('cart-items')[0];
+    var cartRows = cartItemContainer.getElementsByClassName('cart-row');
+    var total = 0;
+    for (var i = 0 ; i< cartRows.length ; i++){
+        var cartRow =cartRows[i];
+        var priceElement = cartRow.getElementsByClassName('cart-price')[0];
+        var quantityElement = cartRow.getElementsByClassName('cart-quantity-input')[0];
+        var price = parseFloat(priceElement.innerText.replace('BYN ' , ''))
+        var quantity = quantityElement.value;
+        total = (total + (price * quantity));
+        total = total * (1 - discount / 100);
+
+    }
+    total = Math.round(total * 100 )/100;
+    document.getElementsByClassName('cart-total-price')[0].innerText = total + ' '+'BYN ';
+}
+function applyPromoCode(promoCodeName) {
+    fetch('/promo/use', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            promoCodeName: promoCodeName
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка при применении промокода');
+            }
+            return response.json();
+        })
+        .then(responseData => {
+            alert('Промокод успешно применен: '+responseData.discountPercentage+"%");
+            updateCartTotalDiscount(responseData.discountPercentage)
+        })
+        .catch(error => {
+            console.error('Произошла ошибка:', error);
+        });
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const applyPromoCodeBtn = document.querySelector('.btn-primary');
+    const promoCodeInput = document.getElementById('promo-code');
+
+    applyPromoCodeBtn.addEventListener('click', function() {
+        const promoCode = promoCodeInput.value.trim();
+        if (promoCode !== '') {
+            applyPromoCode(promoCode);
+        } else {
+            console.error('Введите промокод');
+
+        }
+    });
+});
