@@ -1,6 +1,7 @@
 package bsuir.kraevskij.sportevent.service;
 
 import bsuir.kraevskij.sportevent.model.Purchase;
+import bsuir.kraevskij.sportevent.model.User;
 import bsuir.kraevskij.sportevent.model.UserBalance;
 import bsuir.kraevskij.sportevent.repository.ProductRepository;
 import bsuir.kraevskij.sportevent.repository.PurchaseRepository;
@@ -9,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PurchaseService {
@@ -66,4 +66,45 @@ public class PurchaseService {
             throw new Exception("Insufficient balance for purchase.");
         }
     }
+    public double getTotalSales() {
+        Double totalSales = purchaseRepository.sumAmount();
+        return totalSales != null ? totalSales.doubleValue() : 0.0;
+    }
+
+
+    public double calculateUserPercentage(User user) {
+        double totalSales = getTotalSales();
+        double userSales = getUserSales(user);
+        return (userSales / totalSales) * 100;
+    }
+    private int extractMonthFromDate(Date purchaseDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(purchaseDate);
+        return cal.get(Calendar.MONTH);
+    }
+    @Transactional(readOnly = true)
+    public double getUserSales(User user) {
+        List<Purchase> userPurchases = purchaseRepository.findByBuyer(user);
+        double userSales = userPurchases.stream().mapToDouble(Purchase::getAmount).sum();
+        return userSales;
+    }
+    public List<Map<String, Object>> getUserSalesData(User user) {
+        List<Map<String, Object>> salesData = new ArrayList<>();
+
+        List<Purchase> userPurchases = purchaseRepository.findByBuyer(user);
+        for (int i = 0; i < 12; i++) {
+            Map<String, Object> monthData = new HashMap<>();
+            monthData.put("month", i);
+            int salesCount = 0;
+            for (Purchase purchase : userPurchases) {
+                if (extractMonthFromDate(purchase.getPurchaseDate()) == i) {
+                    salesCount++;
+                }
+            }
+            monthData.put("sales", salesCount);
+            salesData.add(monthData);
+        }
+        return salesData;
+    }
+
 }

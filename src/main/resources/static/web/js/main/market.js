@@ -31,8 +31,6 @@ function resetActiveBtn(){
     });
 }
 
-
-/* Shopping Cart Section */
 if (document.readyState == 'loading'){
     document.addEventListener('DOMContentLoaded' , ready);
 }
@@ -40,7 +38,6 @@ if (document.readyState == 'loading'){
 else{
     ready();
 }
-
 
 function ready(){
     var removeCartItemButton = document.getElementsByClassName('btn-danger');
@@ -63,7 +60,6 @@ function ready(){
 
     document.getElementsByClassName('btn-purchase')[0].addEventListener('click', purchaseClicked)
 }
-
 
 function purchaseClicked(){
     var cartItems = document.getElementsByClassName('cart-items')[0];
@@ -153,14 +149,11 @@ function sendPaymentDataToServer() {
             throw new Error('Network response was not ok.');
         })
         .then(data => {
-            console.log(data); // Успешный ответ от сервера
-            // Очистить корзину или выполнить другие действия после успешной покупки
             cartItems.innerHTML = '';
             updateCartTotal();
         })
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);
-            // Обработка ошибки при выполнении запроса
         });
 }
 

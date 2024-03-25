@@ -132,7 +132,7 @@
                 </div>
                 <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" id="circlePercet2">
                     <div class="mdl-card__title">
-                        <label class="loaderTxt">Total Income</label>
+                        <label class="loaderTxt" id="totalPurchase">Total Income</label>
                     </div>
                     <div class="mdl-card__supporting-text">
                         <canvas class="loaderP" id="my_canvas2" width="140" height="140"></canvas>
@@ -141,21 +141,21 @@
 
                 <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" id="circlePercet3">
                     <div class="PrgsBar">
-                        <label class="prgsTxt">Hourly</label>
+                        <label class="prgsTxt">Часовая</label>
                         <div class="BgBar">
                             <div id="HourlyBar"></div>
                         </div>
                     </div>
 
                     <div class="PrgsBar">
-                        <label class="prgsTxt">Last  Month</label>
+                        <label class="prgsTxt">За последний месяц</label>
                         <div class="BgBar">
                             <div id="MonthlyBar"></div>
                         </div>
                     </div>
 
                     <div class="PrgsBar">
-                        <label class="prgsTxt">Last Year</label>
+                        <label class="prgsTxt">За последний год</label>
                         <div class="BgBar">
                             <div id="YearlyBar"></div>
                         </div>
@@ -165,110 +165,36 @@
 
             <div class="mdl-grid">
                 <div class="mdl-cell mdl-cell--8-col mdl-card mdl-shadow--2dp">
-                    <div class="mdl-card__title"><label>Analytics</label></div>
+                    <div class="mdl-card__title"><label>Аналитика</label></div>
                     <div class="mdl-grid" id="analytics-grid">
                         <div class="mdl-cell mdl-cell--9-col">
                             <canvas id="myChart"></canvas>
-                        </div>
-                        <div class="mdl-cell mdl-cell--3-col">
-                            <div class="mdl-grid innerGrid" id="switch-grid">
-                                <div class="mdl-cell mdl-cell--9-col"><label>Name</label></div>
-                                <div class="mdl-cell mdl-cell--3-col"><label>Show</label></div>
-                            </div>
-                            <div class="mdl-grid innerGrid">
-                                <div class="mdl-cell mdl-cell--9-col"><label>Campaing 1</label></div>
-                                <div class="mdl-cell mdl-cell--3-col">
-                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
-                                        <input type="checkbox" id="switch-1" class="mdl-switch__input">
-                                        <span class="mdl-switch__label"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="mdl-grid innerGrid">
-                                <div class="mdl-cell mdl-cell--9-col"><label>Campaing 2</label></div>
-                                <div class="mdl-cell mdl-cell--3-col">
-                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
-                                        <input type="checkbox" id="switch-2" class="mdl-switch__input" checked>
-                                        <span class="mdl-switch__label"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="mdl-grid innerGrid">
-                                <div class="mdl-cell mdl-cell--9-col"><label>Campaing 3</label></div>
-                                <div class="mdl-cell mdl-cell--3-col">
-                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-3">
-                                        <input type="checkbox" id="switch-3" class="mdl-switch__input" checked>
-                                        <span class="mdl-switch__label"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="mdl-grid innerGrid">
-                                <span id="someText">Etiam ultrices mollis placerat. Proin ullamcorper lectus ut libero blandit pretium.</span>
-                            </div>
-                            <!--                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
-                              <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
-                              <span class="mdl-switch__label"></span>
-                            </label> -->
                         </div>
                     </div>
                 </div>
                 <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp">
                     <div class="mdl-grid innerGrid" id="ActivityBar">
-                        <div class="mdl-cell mdl-cell--10-col"><label id="activityText">Activity</label></div>
+                        <div class="mdl-cell mdl-cell--10-col"><label id="activityText">Уведомления</label></div>
                         <div class="mdl-cell mdl-cell--2-col"><i class="material-icons actSche">&#xE8B5;</i></div>
                     </div>
-                    <div class="events" style="overflow-y: scroll; height: 371px;"><div class="day">
-                        <div class="mdl-grid innerGrid">
-                            <div class="mdl-cell mdl-cell--2-col"><label style="margin: 0.5rem;">&#10686;</label></div>
-                            <div class="mdl-cell mdl-cell--10-col">
-                    <span class="mdl-chip">
-                      <span class="mdl-chip__text">31 March</span>
-                    </span>
-                            </div>
-                        </div>
-
-                        <div class="mdl-grid innerGrid">
-                            <div class="mdl-cell mdl-cell--2-col"></div>
-                            <div class="mdl-cell mdl-cell--8-col">
-                                <label>Client Meeting</label>
-                                <p>DictatorSoft Offfice -  3695, Ananda House, Shantidhara R/A, East Nasirabad, Chittagong</p>
-                            </div>
-                            <div class="mdl-cell mdl-cell--2-col"><p>10 min</p></div>
-                        </div>
-
-                        <div class="mdl-grid innerGrid">
-                            <div class="mdl-cell mdl-cell--2-col"></div>
-                            <div class="mdl-cell mdl-cell--8-col">
-                                <label>Call</label>
-                                <p>From<a href=""> Ibn Hasnain </a><label id="msgAct">No Message Left</label></p>
-                            </div>
-                            <div class="mdl-cell mdl-cell--2-col"><p>2 h</p></div>
-                        </div>
-
-                        <div class="mdl-grid innerGrid">
-                            <div class="mdl-cell mdl-cell--2-col"></div>
-                            <div class="mdl-cell mdl-cell--8-col">
-                                <label>New Invitation</label>
-                                <p>From<a href=""> UX Team </a></p>
-                            </div>
-                            <div class="mdl-cell mdl-cell--2-col"><p>6 h</p></div>
-                        </div></div>
-                        <div class="day">
+                    <div class="events" style="overflow-y: scroll; height: 371px;">
+                        <div class="day" th:each="message : ${message}">
                             <div class="mdl-grid innerGrid">
                                 <div class="mdl-cell mdl-cell--2-col"><label style="margin: 0.5rem;">&#10686;</label></div>
                                 <div class="mdl-cell mdl-cell--10-col">
-                    <span class="mdl-chip">
-                      <span class="mdl-chip__text">30 March</span>
-                    </span>
+                <span class="mdl-chip">
+                  <span class="mdl-chip__text" th:text="${message.date}">31 March</span>
+                </span>
                                 </div>
                             </div>
+
                             <div class="mdl-grid innerGrid">
                                 <div class="mdl-cell mdl-cell--2-col"></div>
                                 <div class="mdl-cell mdl-cell--8-col">
-                                    <label>File Upload</label>
-                                    <p><a href="">Material_Design_Lite.zip</a></p>
+                                    <label th:text="${message.title}">Client Meeting</label>
+                                    <p th:text="${message.description}">DictatorSoft Offfice -  3695, Ananda House, Shantidhara R/A, East Nasirabad, Chittagong</p>
                                 </div>
-                                <div class="mdl-cell mdl-cell--2-col"><p>9 am</p></div>
+                                <div class="mdl-cell mdl-cell--2-col"><p th:text="${message.user.username}">10 min</p></div>
                             </div>
                         </div>
                     </div>

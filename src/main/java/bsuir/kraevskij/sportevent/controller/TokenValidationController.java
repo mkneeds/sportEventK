@@ -31,7 +31,7 @@ public class TokenValidationController {
 
     @PostMapping("auth/login/validateToken")
     public ResponseEntity<?> validateToken(@RequestBody Token token) {
-        try {
+       try {
             User user = new User();
             user.setUsername(jwtService.extractUsername(token.getToken()));
             if (jwtService.isValid(token.getToken(),user)) {
@@ -45,9 +45,10 @@ public class TokenValidationController {
                 return ResponseEntity.ok().body(tokenResponse);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Произошла ошибка: " + e.getMessage() + "\"}");
-        }
+           }
+       } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Произошла ошибка: " + e.getMessage() + "\"}");
+       }
     }
 }
+

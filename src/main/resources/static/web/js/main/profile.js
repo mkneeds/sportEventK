@@ -26,11 +26,8 @@ function getPopularCategory(callback) {
                 var response = JSON.parse(xhr.responseText);
                 var categoryName = response.categoryName;
                 var percentage = response.percentage;
-
-                // Вызываем callback функцию с полученными значениями
                 callback(null, categoryName, percentage);
             } else {
-                // Если запрос не успешен, вызываем callback функцию с ошибкой
                 callback("Произошла ошибка при выполнении запроса: " + xhr.status);
             }
         }
@@ -67,21 +64,65 @@ function progressSim(){
     ctx.stroke();
     if(al >= perCat){
         clearTimeout(sim);
-        // Add scripting here that will run when progress completes
     }
     al++;
 }
 var sim = setInterval(progressSim, 30);
 
 
-//second one
+
 
 var al1 = 0;
 var start1 = 4.72;
 var cw1 = ctx.canvas.width;
 var ch1 = ctx.canvas.height;
 var diff1;
+async function getTotalSales() {
+    try {
+        const response = await fetch('/purchase/calculateTotalSales');
+        if (!response.ok) {
+            throw new Error('Ошибка при получении общей суммы продаж');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+}
+async function getTotalSalesPercantages() {
+    try {
+        const response = await fetch('/purchase/calculatePercantageTotal');
+        if (!response.ok) {
+            throw new Error('Ошибка при получении общей суммы продаж');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+}
+
+async function updateTotalPurchase() {
+    try {
+        const totalSales = await getTotalSales();
+        document.getElementById("totalPurchase").textContent = "Сумма продаж: " + totalSales + " BYN";
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+}
+
+updateTotalPurchase();
+let totalSalesPercantages;
+getTotalSalesPercantages()
+    .then(result => {
+        totalSalesPercantages = result;
+    })
+    .catch(error => {
+        console.error('Произошла ошибка:', error);
+    });
+
 function progressSim1(){
+
     diff1 = ((al1 / 100) * Math.PI*2*10).toFixed(2);
     ctx1.clearRect(0, 0, cw, ch);
     ctx1.lineWidth = 5;
@@ -93,9 +134,8 @@ function progressSim1(){
     ctx1.beginPath();
     ctx1.arc(72, 72, 60, start1, diff1/10+start1, false);
     ctx1.stroke();
-    if(al1 >= 50){
+    if(al1 >= totalSalesPercantages){
         clearTimeout(sim1);
-        // Add scripting here that will run when progress completes
     }
     al1++;
 }
@@ -138,6 +178,8 @@ function frameY() {
         yBar.style.width = widthY + '%';
     }
 }
+
+
 
 //chartjs Barchart
 
@@ -187,46 +229,60 @@ function frameY() {
 
 
 var ctxOfBarChart = document.getElementById("myChart").getContext("2d");
+let userSalesData = [];
 
-var mychart = new Chart(ctxOfBarChart, {
-    type: 'bar',
-    data: {
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-        datasets: [
-            {
-                label: "Campaing2",
-                backgroundColor: [
-                    'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)'
-                ],
-                borderWidth: 2,
-                data: [10, 20, 15, 25, 15, 13, 16, 23, 45, 12, 44, 29]
-            },
-            {
-                label: "Campaing3",
-                backgroundColor: [
-                    'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)', 'rgba(68,138,255,0.3)',
-                ],
-                borderWidth: 2,
-                data: [20, 10, 25, 15, 35, 3, 36, 23, 35, 32, 24, 19]
-            }
-        ]
-    },
-    options: {
-        scales: {
-            xAxes: [
-                {
-                    barThickness: 18
-                }
-            ],
-            yAxes: [{
-                barThickness: 5,
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
+async function getUserSalesData() {
+    try {
+        const response = await fetch('/purchase/getUserSales');
+        if (!response.ok) {
+            throw new Error('Ошибка при получении данных о продажах пользователя');
         }
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Ошибка:', error);
+        throw error;
     }
-});
+}
+
+(async () => {
+    try {
+        userSalesData = await getUserSalesData();
+        var mychart = new Chart(ctxOfBarChart, {
+            type: 'bar',
+            data: {
+                labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+                datasets: [
+                    {
+                        label: "Продажи",
+                        backgroundColor: [
+                            'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)', 'rgba(68,138,255,1)'
+                        ],
+                        borderWidth: 2,
+                        data: userSalesData
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [
+                        {
+                            barThickness: 18
+                        }
+                    ],
+                    yAxes: [{
+                        barThickness: 5,
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Произошла ошибка:', error);
+    }
+})();
 
 //counter1
 var cuntr1 = document.getElementsByClassName("counter1");
