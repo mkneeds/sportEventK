@@ -161,3 +161,5 @@ function addAdditionalLinks(role) {
         dropdown.appendChild(manageProductsLink);
     }
 }
+
+

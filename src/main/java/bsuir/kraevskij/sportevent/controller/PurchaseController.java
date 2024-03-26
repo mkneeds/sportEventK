@@ -53,6 +53,20 @@ public class PurchaseController {
         }
         return response;
     }
+    @PostMapping("/pay")
+    public ResponseEntity<Object> pay(@RequestBody Map<String, Object> payload,HttpServletRequest request) {
+        try {
+            double amount = Double.parseDouble(payload.get("amount").toString());
+            String token = jwtService.extractTokenFromCookie(request);
+            UserBalance userBalance = userBalanceRepository.findByUser_Username(jwtService.extractUsername(token));
+            userBalance.setBalance(amount+userBalance.getBalance());
+            userBalanceRepository.save(userBalance);
+            return ResponseEntity.ok().body(Map.of("amount", amount));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid amount"));
+        }
+    }
+
     @GetMapping("/purchase/calculateTotalSales")
     public ResponseEntity<Double> calculateTotalSales(HttpServletRequest request) {
         String token = jwtService.extractTokenFromCookie(request);
