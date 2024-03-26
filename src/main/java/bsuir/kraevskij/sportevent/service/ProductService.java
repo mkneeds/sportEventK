@@ -2,31 +2,44 @@ package bsuir.kraevskij.sportevent.service;
 
 import bsuir.kraevskij.sportevent.exception.ResourceNotFoundException;
 import bsuir.kraevskij.sportevent.exception.UnauthorizedException;
+import bsuir.kraevskij.sportevent.model.Category;
 import bsuir.kraevskij.sportevent.model.Product;
 import bsuir.kraevskij.sportevent.model.User;
+import bsuir.kraevskij.sportevent.repository.CategoryRepository;
 import bsuir.kraevskij.sportevent.repository.ProductRepository;
 import bsuir.kraevskij.sportevent.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private  final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
+    public ProductService(ProductRepository productRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
-
+    public List<Product> findProductsByCategoryId(Long categoryId) {
+        return productRepository.findByCategoryId(categoryId);
+    }
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
     public Optional<Product> getProductByTitles(String title) {
         return productRepository.findByName(title);
     }
-
+    public void updateProductCategory(Long productId, Category newCategory) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product != null) {
+            product.setCategory(newCategory);
+            productRepository.save(product);
+        }
+    }
 
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
@@ -49,7 +62,22 @@ public class ProductService {
         }
     }
 
+    public void updateProductsCategoryForDeletedCategory(Long categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        List<Category> categoriesExceptDeleted = categoryRepository.findAllByIdNot(categoryId);
+        if (!categoriesExceptDeleted.isEmpty()) {
+            Random random = new Random();
 
+            for (Product product : products) {
+
+                Category randomCategory = categoriesExceptDeleted.get(random.nextInt(categoriesExceptDeleted.size()));
+                product.setCategory(randomCategory);
+            }
+
+            productRepository.saveAll(products);
+        }
+        categoryRepository.deleteById(categoryId);
+    }
 
     public int getProductCountByCategory(Long categoryId) {
         return productRepository.countByCategoryId(categoryId);

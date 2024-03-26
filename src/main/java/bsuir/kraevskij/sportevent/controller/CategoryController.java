@@ -3,10 +3,9 @@ package bsuir.kraevskij.sportevent.controller;
 import bsuir.kraevskij.sportevent.model.Category;
 import bsuir.kraevskij.sportevent.service.CategoryService;
 import bsuir.kraevskij.sportevent.service.ProductService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +19,31 @@ public class CategoryController {
     public CategoryController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
         this.categoryService = categoryService;
+    }
+    @PostMapping("/admin/categories/add")
+    public ResponseEntity<Object> addCategory(@ModelAttribute("category") Category category) {
+        categoryService.saveCategory(category);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("/admin/categories/delete/{id}")
+    public ResponseEntity<Object> deleteCategory(@PathVariable("id") Long id) {
+        Category category = new Category();
+        category.setId(id);
+        categoryService.deleteCategory(category);
+        return ResponseEntity.ok().build(); // Возвращаем статус 200 OK
+    }
+
+    @PostMapping("/admin/categories/edit/{id}")
+    public ResponseEntity<Object> editCategory(@PathVariable("id") Long id, @RequestBody Map<String, String> requestBody) {
+        String newName = requestBody.get("name");
+        Category category = new Category();
+        if (category == null) {
+            return ResponseEntity.notFound().build();
+        }
+        category.setId(id);
+        category.setName(newName);
+        categoryService.saveCategory(category);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/popular-category")

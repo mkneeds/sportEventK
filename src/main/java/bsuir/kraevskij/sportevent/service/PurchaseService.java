@@ -70,6 +70,9 @@ public class PurchaseService {
         Double totalSales = purchaseRepository.sumAmount();
         return totalSales != null ? totalSales.doubleValue() : 0.0;
     }
+    public List<Purchase> getAllPurchases() {
+        return purchaseRepository.findAll();
+    }
 
 
     public double calculateUserPercentage(User user) {
