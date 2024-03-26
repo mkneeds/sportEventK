@@ -21,7 +21,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
     @PostMapping("/admin/categories/add")
-    public ResponseEntity<Object> addCategory(@ModelAttribute("category") Category category) {
+    public ResponseEntity<Object> addCategory(@RequestBody Category category) {
         categoryService.saveCategory(category);
         return ResponseEntity.ok().build();
     }

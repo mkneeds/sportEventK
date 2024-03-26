@@ -42,6 +42,7 @@ public class TokenValidationController {
                 }
                 UserBalance userBalance = userBalanceRepository.findByUser(user);
                 tokenResponse.put("message", user.getUsername()+" ("+userBalance.getBalance()+" руб.)");
+                tokenResponse.put("role",userOptional.get().getRole().getName());
                 return ResponseEntity.ok().body(tokenResponse);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

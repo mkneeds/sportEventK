@@ -2,7 +2,9 @@ package bsuir.kraevskij.sportevent.controller;
 
 import bsuir.kraevskij.sportevent.model.Category;
 import bsuir.kraevskij.sportevent.model.Purchase;
+import bsuir.kraevskij.sportevent.model.Role;
 import bsuir.kraevskij.sportevent.model.User;
+import bsuir.kraevskij.sportevent.repository.RoleRepository;
 import bsuir.kraevskij.sportevent.repository.UserRepository;
 import bsuir.kraevskij.sportevent.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,18 +19,16 @@ import java.util.Optional;
 @RestController
 public class AdminProfileController {
     private final CategoryService categoryService;
-    private final ProductService productService;
-    private final AdminMessageService adminMessageService;
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PurchaseService purchaseService;
-    public AdminProfileController(CategoryService categoryService, ProductService productService, AdminMessageService adminMessageService, JwtService jwtService, UserRepository userRepository, PurchaseService purchaseService) {
+    private final RoleRepository roleRepository;
+    public AdminProfileController(CategoryService categoryService, ProductService productService, AdminMessageService adminMessageService, JwtService jwtService, UserRepository userRepository, PurchaseService purchaseService, RoleRepository roleRepository) {
         this.categoryService = categoryService;
-        this.productService = productService;
-        this.adminMessageService = adminMessageService;
         this.jwtService=jwtService;
         this.userRepository = userRepository;
         this.purchaseService = purchaseService;
+        this.roleRepository = roleRepository;
     }
 
     @RequestMapping("/profile-admin")
@@ -38,6 +38,7 @@ public class AdminProfileController {
         List<User> users = userRepository.findAll();
         List<Purchase> purchases = purchaseService.getAllPurchases();
         List<Category> categories = categoryService.getAllCategory();
+        List<Role> roles = roleRepository.findAll();
         double totalAmount = purchases.stream().mapToDouble(Purchase::getAmount).sum();
         ModelAndView modelAndView = new ModelAndView("admin");
         modelAndView.addObject("user", user.get());
@@ -45,6 +46,7 @@ public class AdminProfileController {
         modelAndView.addObject("purchases", purchases);
         modelAndView.addObject("totalAmount", totalAmount);
         modelAndView.addObject("categories", categories);
+        modelAndView.addObject("roles", roles);
         return modelAndView;
     }
 }

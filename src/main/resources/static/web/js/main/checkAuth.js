@@ -17,6 +17,8 @@ function checkTokenValidity() {
         })
         .then(data => {
             var username = data.message;
+            console.log(data.role)
+            addAdditionalLinks(data.role);
             replaceElement(username)
         })
         .catch(error => {
@@ -137,3 +139,25 @@ document.getElementById("ProfileB").addEventListener("click", function() {
 
 
 
+function addAdditionalLinks(role) {
+    const dropdown = document.getElementById('buttonShadow');
+
+    if (role === 'ADMIN') {
+        const adminProfileLink = document.createElement('a');
+        adminProfileLink.href = '/profile-admin';
+        adminProfileLink.textContent = 'Профиль админа';
+
+        const customerProfileLink = document.createElement('a');
+        customerProfileLink.href = '/profile';
+        customerProfileLink.textContent = 'Профиль продавца';
+        const firstChild = dropdown.firstChild;
+
+        dropdown.insertBefore(customerProfileLink, firstChild);
+        dropdown.insertBefore(adminProfileLink, firstChild);
+    } else if (role === 'CREATOR') {
+        const manageProductsLink = document.createElement('a');
+        manageProductsLink.href = '/profile';
+        manageProductsLink.textContent = 'Профиль продавца';
+        dropdown.appendChild(manageProductsLink);
+    }
+}
